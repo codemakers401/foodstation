@@ -75,5 +75,4 @@ authRouter.put('/users/:id', bearerAuth, permissions('delete'), async (req, res,
   console.log(userRecords);
   res.status(200).json(userRecords);
 });
-
 module.exports = authRouter;
