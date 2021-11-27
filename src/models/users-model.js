@@ -7,23 +7,31 @@ const SECRET = process.env.SECRET || 'zxcvbnm';
 
 const userSchema = (sequelize, DataTypes) => {
   const model = sequelize.define('users', {
-    username: { type: DataTypes.STRING, allowNull: false, unique: true },
+    username: { type: DataTypes.STRING, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },
-    userRole: { type: DataTypes.ENUM('Admin', 'Customer'), defaultValue: 'Customer' },
+    userRole: { type: DataTypes.ENUM('Admin', 'Customer','Driver'), defaultValue: 'Customer' },
     userAddress: { type: DataTypes.STRING, allowNull: false },
     userPhone: { type: DataTypes.STRING, allowNull: false },
+    userEmail: { type: DataTypes.STRING, allowNull: false, unique: true },
     token: { type: DataTypes.VIRTUAL },
     actions: {
       type: DataTypes.VIRTUAL,
       get() {
         const acl = {
-          Customer: ['read'],
-          Admin: ['read', 'create', 'update', 'delete']
+          Customer: ['read','update-profile' ],
+          Driver:   ['read','update-profile','update-status','create'],
+          Admin:    ['read','update-profile','create', 'update', 'delete',],
         }
         return acl[this.userRole];
       }
     }
   });
+
+  model.beforeCreate(async (user) => {
+    let hashedPass = await bcrypt.hash(user.password, 10);
+    user.password = hashedPass;
+  });
+
   // we attached a function to our Users Model
   model.authenticateBasic = async function (username, password) {
     // get the user form the database 
@@ -54,6 +62,6 @@ const userSchema = (sequelize, DataTypes) => {
     }
   }
 
-
+  return model
 }
 module.exports = userSchema;
