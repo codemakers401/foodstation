@@ -13,10 +13,12 @@ class Collection {
   }
 
   async read(id) {
-    let record;
+    let record=[];
     try {
       if (id) {
-        record = await this.model.findOne({ where: { id: id } })
+        record[0] = await this.model.findOne({ where:{id} })
+        if(!record[0])
+        record[0]=`there is no user with id of ${id}`
       } else {
         record = await this.model.findAll()
       }
@@ -24,12 +26,12 @@ class Collection {
     } catch (e) {
       console.error('error in reading record/s for model', this.model)
     }
-
+ 
   }
 
   async update(id, obj) {
     try {
-      let recordId = await this.model.findOne({ where: { id: id } })
+      let recordId = await this.model.findOne({ where: { id} })
       let updateRecord = await recordId.update(obj);
       return updateRecord;
     } catch (e) {
@@ -45,7 +47,7 @@ class Collection {
       console.error('error in deleting record for model', this.model, `id:${id}`)
     }
   }
-
+  
 }
 
 module.exports = Collection;

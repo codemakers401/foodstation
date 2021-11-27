@@ -4,11 +4,11 @@ const express = require('express');
 const cors = require('cors')
 require('dotenv').config()
 
-const authroutes = require('./routes/users');
-const authroutes = require('./routes/item');
-const authroutes = require('./routes/order');
-const authroutes = require('./routes/profile');
-const authroutes = require('./routes/restaurant');
+const authRoutes = require('./routes/users');
+const itemRoutes = require('./routes/items');
+const orderRoutes = require('./routes/orders');
+const profileRoutes = require('./routes/profile');
+const restaurantRoutes = require('./routes/restaurant');
 
 const notFoundHandler = require('./error-handlers/404.js');
 const errorHandler = require('./error-handlers/500.js');
@@ -30,8 +30,8 @@ app.use(express.urlencoded({
 // app.use(authRouter)
 // app.use('/api/v1', v1Routes);
 // app.use('/api/v2', v2Routes);
-app.use(authroutes);
-app.use('/items')
+app.use(authRoutes);
+app.use(itemRoutes)
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
