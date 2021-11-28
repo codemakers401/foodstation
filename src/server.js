@@ -32,6 +32,7 @@ app.use(express.urlencoded({
 // app.use('/api/v2', v2Routes);
 app.use(authRoutes);
 app.use(itemRoutes)
+app.use(restaurantRoutes)
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
