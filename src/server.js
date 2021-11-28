@@ -11,6 +11,7 @@ const profile = require('./routes/profile');
 const orderRoutes = require('./routes/orders');
 const profileRoutes = require('./routes/profile');
 const restaurantRoutes = require('./routes/restaurant');
+const status = require('./routes/status')
 
 const notFoundHandler = require('./error-handlers/404.js');
 const errorHandler = require('./error-handlers/500.js');
@@ -37,6 +38,8 @@ app.use(authRoutes);
 app.use(item)
 app.use(profile)
 app.use(restaurantRoutes)
+app.use(status)
+
 
 app.use('*', notFoundHandler);
 app.use(errorHandler);
