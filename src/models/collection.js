@@ -30,6 +30,7 @@ class Collection {
       return record;
     } catch (e) {
       console.error('error in reading record/s for model', this.model)
+      // return record[0]=`there is no user with id of ${id}`
     }
  
   }
