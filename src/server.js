@@ -33,8 +33,10 @@ app.use(express.urlencoded({
 // app.use('/api/v1', v1Routes);
 // app.use('/api/v2', v2Routes);
 app.use(authRoutes);
+
 app.use(item)
 app.use(profile)
+app.use(restaurantRoutes)
 
 app.use('*', notFoundHandler);
 app.use(errorHandler);
