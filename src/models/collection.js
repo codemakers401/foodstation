@@ -18,7 +18,7 @@ class Collection {
       if (id) {
         record[0] = await this.model.findOne({ where:{id} })
         if(!record[0])
-        record[0]=`there is no user with id of ${id}`
+        record[0]=`there is no record with id of ${id}`
       } else {
         record = await this.model.findAll()
       }
