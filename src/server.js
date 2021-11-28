@@ -5,7 +5,9 @@ const cors = require('cors')
 require('dotenv').config()
 
 const authRoutes = require('./routes/users');
-const itemRoutes = require('./routes/items');
+const item = require('./routes/items');
+const profile = require('./routes/profile');
+
 const orderRoutes = require('./routes/orders');
 const profileRoutes = require('./routes/profile');
 const restaurantRoutes = require('./routes/restaurant');
@@ -31,8 +33,11 @@ app.use(express.urlencoded({
 // app.use('/api/v1', v1Routes);
 // app.use('/api/v2', v2Routes);
 app.use(authRoutes);
-app.use(itemRoutes)
+
+app.use(item)
+app.use(profile)
 app.use(restaurantRoutes)
+
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
