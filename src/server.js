@@ -9,7 +9,7 @@ const itemRoutes = require('./routes/items');
 const orderRoutes = require('./routes/orders');
 const profileRoutes = require('./routes/profile');
 const restaurantRoutes = require('./routes/restaurant');
-
+const status = require('./routes/status')
 const notFoundHandler = require('./error-handlers/404.js');
 const errorHandler = require('./error-handlers/500.js');
 // const logger = require('./middleware/logger.js');
@@ -32,6 +32,7 @@ app.use(express.urlencoded({
 // app.use('/api/v2', v2Routes);
 app.use(authRoutes);
 app.use(itemRoutes)
+app.use(status)
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 

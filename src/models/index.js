@@ -2,7 +2,7 @@
 
 const { Sequelize, DataTypes } = require('sequelize');
 
-const DATABASE_URL = process.env.DATABASE_URL || "postgresql://localhost:5432/foodstation";
+const DATABASE_URL =  process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL;;
 const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
   dialectOptions: {
     ssl: {

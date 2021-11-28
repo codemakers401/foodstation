@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "initDB" :"sequelize db:create"
+    "test": "NODE_ENV=test jest",
+    "initDB": "sequelize db:create"
   },
   "repository": {
     "type": "git",

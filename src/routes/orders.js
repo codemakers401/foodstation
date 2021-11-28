@@ -16,7 +16,7 @@ router.delete('./order/id',bearerAuth,permissions('read'),hundlerDelete)
 
 async function hundlerGet(req, res) {
   try {
-    let allRecords = await orderCollection.get();
+    let allRecords = await orderCollection.read();
     res.status(200).json(allRecords);
   } catch (err) {
     throw new Error(err.message);
@@ -25,8 +25,8 @@ async function hundlerGet(req, res) {
 
 async function hundlerGetOne(req, res) {
   try {
-    let id = req.params.id
-    let allRecords = await orderCollection.get(id);
+    let id = req.user.customerID
+    let allRecords = await orderCollection.read(id);
     res.status(200).json(allRecords);
   } catch (err) {
     throw new Error(err.message);
