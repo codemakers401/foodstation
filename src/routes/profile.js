@@ -1,44 +1,40 @@
-'use strict'
-
-const express = require("express")
+'use strict';
+const express = require('express');
+const profile = express.Router();
 const { userCollection } = require('../models/index');
-const router = express.Router()
-// const basicAuth = require('../middleware/basic');
-const bearerAuth = require("../middleware/bearer");
-const permissions = require("../middleware/acl.js");
+const bearerAuth = require('../middleware/bearer')
+const permissions = require('../middleware/acl.js')
 
-router.get('./profile/',bearerAuth,permissions('read'),hundlerGetOne)
-router.put('./profile/',bearerAuth,permissions('read'),hundlerUpdate)
-router.delete('./profile/',bearerAuth,permissions('read'),hundlerDelete)
+profile.get('/profile', bearerAuth, permissions('update-profile'), async (req, res, next) => {
 
-
-async function hundlerGetOne(req, res) {
-  try {
-    let allRecords = await userCollection.get(req.user.id);
-    res.status(200).json(allRecords);
-  } catch (err) {
-    throw new Error(err.message);
-  }
+  let userInfo = await userCollection.read(req.user.id);
+  console.log(userInfo);
+  let resultData = '';
+  if(userInfo){
+  const list = userInfo.map(user => {
+     user = {
+      userId: user.id,
+      username: user.username,
+      userEmail: user.userEmail,
+      userRole: user.userRole,
+    }
+    return user
+  });
+  if (list[0].userId>0) { resultData=list } else { resultData=userRecords }
 }
-
-
-async function hundlerUpdate(req, res) {
-  try {
-    const obj = req.body;
-    let updatedRecord = await userCollection.update(req.user.id, obj);
-    res.status(200).json(updatedRecord);
-  } catch (err) {
-    throw new Error(err.message);
-  }
+else{
+  resultData = 'Sorry ,,, The ID Should be Integer';
 }
-
-
-async function hundlerDelete(req, res) {
-  try {
-    let deletedRecord = await userCollection.delete(req.user.id);
-    res.status(200).json(deletedRecord);
-  } catch (err) {
-    throw new Error(err.message);
-  }
-}
-module.exports=router;
+  res.status(200).json(resultData);
+});
+profile.put('/profile', bearerAuth, permissions('update-profile'), async (req, res, next) => {
+   let userData ={}
+    req.body.username&&(userData.username = req.body.username);
+    req.body.userAddress&&(userData.userAddress = req.body.userAddress);
+    req.body.userPhone&&(userData.userPhone = req.body.userPhone);
+    console.log(userData);
+  let userRecords = await userCollection.update(req.user.id,userData);
+  console.log(userRecords);
+  res.status(200).json(userRecords);
+});
+module.exports = profile;
