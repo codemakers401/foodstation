@@ -1,8 +1,8 @@
 'use strict';
 
 const { Sequelize, DataTypes } = require('sequelize');
-require('dotenv').config()
-const DATABASE_URL =  process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL;
+
+const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite:memory:' : process.env.DATABASE_URL || "postgresql://localhost:5432/foodstation";
 const DATABASE_CONFIG = process.env.NODE_ENV === 'production' ? {
   dialectOptions: {
     ssl: {
@@ -23,10 +23,13 @@ const billSchema = require('./bill-model');
 
 
 const itemsModel = itemsSchema(sequelize, DataTypes);
+console.log("itemsModel",itemsModel);
 const orderStatusModel = orderStatusSchema(sequelize, DataTypes);
 const ordersModel = ordersSchema(sequelize, DataTypes);
 const restaurantModel = restaurantSchema(sequelize, DataTypes);
 const userModel = userSchema(sequelize, DataTypes);
+console.log("userModel",userModel);
+
 const billModel = billSchema(sequelize, DataTypes);
 //---------items ==> orders
 console.log(itemsModel);
@@ -51,6 +54,11 @@ billModel.belongsTo(orderStatusModel, { foreignKey: 'statusID', targetKey: 'id' 
 billModel.hasMany(ordersModel, { foreignKey: 'billID', sourceKey: 'id' });
 ordersModel.belongsTo(billModel, { foreignKey: 'billID', targetKey: 'id' })
 
+
+
+
+
+
 const Collection = require('./collection');
 
 const itemsCollection = new Collection(itemsModel);
@@ -61,6 +69,9 @@ const userCollection = new Collection(userModel);
 const billCollection = new Collection(billModel);
 
 
+// itemsCollection.readItem = async (id)=>{
+//   let record=[];
+  
 
 module.exports = {
   db: sequelize,
@@ -69,5 +80,6 @@ module.exports = {
   ordersCollection: ordersCollection,
   restaurantCollection: restaurantCollection,
   userCollection: userCollection,
-  billCollection:billCollection
+  billCollection:billCollection,
+  restaurantModel:restaurantModel,
 }
