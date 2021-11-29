@@ -6,7 +6,7 @@ const itemsSchema = (sequelize, DataTypes) => {
       itemCategory: { type: DataTypes.STRING, allowNull: false, },
       itemPrice:{type: DataTypes.INTEGER, allowNull: false},
       restaID:{type: DataTypes.INTEGER, allowNull: false},
-      available:{type: DataTypes.INTEGER, allowNull: false}
+      available:{type: DataTypes.BOOLEAN, allowNull: false}
     });
     
     return model
