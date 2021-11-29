@@ -8,24 +8,19 @@ const permissions = require('../middleware/acl.js')
 profile.get('/profile', bearerAuth, permissions('update-profile'), async (req, res, next) => {
 
   let userInfo = await userCollection.read(req.user.id);
-  console.log(userInfo);
-  let resultData = '';
-  if(userInfo){
   const list = userInfo.map(user => {
      user = {
       userId: user.id,
       username: user.username,
       userEmail: user.userEmail,
       userRole: user.userRole,
+      userAddress: user.userAddress,
+      userPhone: user.userPhone,
     }
     return user
   });
-  if (list[0].userId>0) { resultData=list } else { resultData=userRecords }
-}
-else{
-  resultData = 'Sorry ,,, The ID Should be Integer';
-}
-  res.status(200).json(resultData);
+ 
+  res.status(200).json(list);
 });
 profile.put('/profile', bearerAuth, permissions('update-profile'), async (req, res, next) => {
    let userData ={}

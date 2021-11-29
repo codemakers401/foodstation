@@ -1,8 +1,9 @@
 'use strict';
-const {restaurantModel}=require('./index')
+
 class Collection {
-  constructor(model) {
+  constructor(model,parentModel=null) {
     this.model = model;
+    this.parentModel=parentModel
   }
 
   async create(obj) {
@@ -29,7 +30,8 @@ class Collection {
       }
       return record;
     } catch (e) {
-      console.error('error in reading record/s for model', this.model)
+      console.error('error in reading record/s for model', this.model, e.message)
+      // return record[0]=`there is no user with id of ${id}`
     }
  
   }
@@ -38,11 +40,11 @@ class Collection {
      let record=[];
     try {
       if (id) {
-        record[0] = await this.model.findOne({ include: restaurantModel, where:{id} })
+        record[0] = await this.model.findOne({where:{id}, include: this.parentModel })
         if(!record[0])
         record[0]=`there is no user with id of ${id}`
       } else {
-        record = await this.model.findAll({ include: restaurantModel})
+        record = await this.model.findAll({ include: this.parentModel})
       }
       return record;
     } catch (e) {
@@ -51,17 +53,14 @@ class Collection {
   
   }
   
-  
   async readItemByResId(id) {
     let record=[];
     try {
-      if (id) {
-        record[0] = await this.model.findOne({include:'restaurants', where:{restaID:id} })
-        if(!record[0])
-        record[0]=`there is no user with id of ${id}`
-      } else {
-        record = await this.model.findAll({include:'restaurants'})
-      }
+      
+        record = await this.model.findAll({ include: this.parentModel , where:{restaID:id} }) 
+         if(!record[0])
+        record[0]=`there is no record with id of ${id}`
+      
       return record;
     } catch (e) {
       console.error('error in reading record/s for model', this.model)
