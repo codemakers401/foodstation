@@ -6,6 +6,8 @@ const {server} = require('../src/server');
 const mockRequest = supertest(server);
 const { db } = require('../src/models/index');
 
+setTimeout(() => {
+    
 
 
 beforeAll(async () => {
@@ -13,8 +15,7 @@ beforeAll(async () => {
 });
 afterAll(async () => {
     await db.drop();
-});
-
+  });
 
 let users = {
     Admin: { username: 'munes', password: 'password', userRole: 'Admin' ,userAddress :"Amman ",userPhone:"079", userEmail :"munes1"},
@@ -174,7 +175,7 @@ describe('check status route with admin', () => {
                  let newStaus = {
                     StatusName : "not avalibale"
                    }
-                   
+                   console.log(auth.body,'------------------');
                 const response = await mockRequest.put('/status/1').send(newStaus).set('Authorization', `Bearer ${auth.body.token}`);
                 const userObject = response.body;
                 expect(response.status).toBe(500);
@@ -182,11 +183,5 @@ describe('check status route with admin', () => {
                 
             })
 
-
-
-
-
-
-
-
         });
+    }, 20000);
