@@ -6,7 +6,7 @@ const supertest = require('supertest')
 const {server} = require('../src/server')
 const mockRequest = supertest(server);
 const { db } = require("../src/models/index");
-
+setTimeout(() => {
 beforeAll(async () => {
   await db.sync();
 });
@@ -22,11 +22,11 @@ let user = {
         userRole: 'Admin',
         userAddress: 'Amman',
         userPhone: '0797778889',
-        userEmail: 'nedal@gmail.com',
+        userEmail: 'nedal2@gmail.com',
       
 }
 
-describe('Restaurent router', ()=>{
+describe('Restaurant router', ()=>{
 
   it('It should GET the restaurant by ID',async ()=>{
    
@@ -78,16 +78,16 @@ describe('Restaurent router', ()=>{
 
    it('It should add the restaurant details',async ()=>{
    
-    await mockRequest.post("/signup").send(
-        user
-      );
+    // await mockRequest.post("/signup").send(
+    //     user
+    //   );
 
       let auth = await mockRequest.post("/signin").auth("Nedal", "123");
 
       let res = await mockRequest
         .post("/restaurant")
         .send({
-            restaurantName: 'ABC',
+            restaurantName: 'ABC10',
             restaurantLocation: 'Amman',
         })
         .set("Authorization", `Bearer ` + auth.body.token);
@@ -135,3 +135,4 @@ describe('Restaurent router', ()=>{
 //  })
 
 })
+},10000);
