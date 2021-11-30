@@ -6,5 +6,5 @@ require('dotenv').config()
 const PORT = process.env.PORT || 3030;
 
 db.sync().then(() => {
-  server.start(PORT);
+  server.start(3020);
 });

@@ -5,11 +5,16 @@ const router = express.Router()
 const basicAuth = require('../middleware/basic');
 const bearerAuth = require("../middleware/bearer");
 const permissions = require("../middleware/acl.js");
+const host = process.env.HOST||'https://foodstation-2021.herokuapp.com';
+const io = require('socket.io-client')(host)
+const socket = io.connect(host)
+socket.on('updateBill',c=>{
+  console.log('\x1b[34m ricieved a msg from servet in oerder : ',c);})
 
 
 router.post('/order', bearerAuth, permissions('read'), async (req, res, next) => {
-  let ItemDetails = await itemsCollection.readItem(req.body.itemID);
 
+  let ItemDetails = await itemsCollection.readItem(req.body.itemID);
   let item = req.body;
   item.price = ItemDetails[0].itemPrice
   item.totalItem = ItemDetails[0].itemPrice * req.body.qty
@@ -24,7 +29,22 @@ router.post('/order', bearerAuth, permissions('read'), async (req, res, next) =>
   let billRecord = await billCollection.create(bill);
   item.billID = billRecord.id
   let orderRecord = await ordersCollection.create(item);
-  res.status(201).json(orderRecord);
+  
+  
+socket.emit('createOrder',billRecord);
+socket.on('newOrder',c=>{
+  console.log(c);
+  let x=[orderRecord ,c]
+  // res.status(201).json(x);
+  // res.status(201).json(c);
+})
+socket.on('updateBill',c=>{
+  console.log(c);
+  let x=[orderRecord ,c]
+  res.status(201).json(x);
+  // res.status(201).json(c);
+})
+
 });
 router.get('/order', bearerAuth, permissions('read'), async (req, res, next) => {
   let bill = await billCollection.readOrders(req.user.id);
@@ -64,6 +84,7 @@ async function updateStatus(req, res) {
     let obj = {};
     obj.statusID = req.body.statusID  
     let updatedRecord = await billCollection.update(id, obj);
+    socket.emit('billUpdate',updatedRecord)
     res.status(200).json(updatedRecord);
   } catch (err) {
     throw new Error(err.message);
