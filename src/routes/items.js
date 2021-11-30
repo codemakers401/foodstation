@@ -75,7 +75,7 @@ item.post('/item', bearerAuth, permissions('delete'), async (req, res, next) => 
 
   let newItem = await itemsCollection.create(newObj);
   console.log("newItem", newItem);
-  res.status(200).json(newItem);
+  res.status(201).json(newItem);
 });
 
 item.delete('/item/:id', bearerAuth, permissions('delete'), async (req, res, next) => {
