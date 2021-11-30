@@ -8,9 +8,9 @@ beforeAll(async () => {
   await db.sync();
 });
 
-afterAll(async () => {
-  await db.drop();
-});
+// afterAll(async () => {
+//   await db.drop();
+// });
 
 
 describe('server testing', () => {
