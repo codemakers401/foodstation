@@ -7,7 +7,7 @@ const orderSchema = (sequelize, DataTypes) => {
       qty: { type: DataTypes.INTEGER ,allowNull: false },
       price: { type: DataTypes.INTEGER ,allowNull: false },
       totalItem: { type: DataTypes.INTEGER ,allowNull: false },
-      
+      billID : { type: DataTypes.INTEGER ,allowNull: false }
       
     });
     return model

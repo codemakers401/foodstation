@@ -39,14 +39,14 @@ ordersModel.belongsTo(itemsModel, { foreignKey: 'itemID', targetKey: 'id' })
 userModel.hasMany(billModel, { foreignKey: 'custID', sourceKey: 'id' });
 billModel.belongsTo(userModel, { foreignKey: 'custID', targetKey: 'id' })
 //---------driver ==> bills
-userModel.hasMany(billModel, { foreignKey: 'driverID', sourceKey: 'id' });
-billModel.belongsTo(userModel, { foreignKey: 'driverID', targetKey: 'id' })
+// userModel.hasMany(billModel, { foreignKey: 'driverID', sourceKey: 'id' });
+// billModel.belongsTo(userModel, { foreignKey: 'driverID', targetKey: 'id' })
 //---------restaurant ==> items
 restaurantModel.hasMany(itemsModel, { foreignKey: 'restaID', sourceKey: 'id' });
 itemsModel.belongsTo(restaurantModel, { foreignKey: 'restaID', targetKey: 'id' })
 //---------restaurant ==> bills
-restaurantModel.hasMany(billModel, { foreignKey: 'restaID', sourceKey: 'id' });
-billModel.belongsTo(restaurantModel, { foreignKey: 'restaID', targetKey: 'id' })
+// restaurantModel.hasMany(billModel, { foreignKey: 'restaID', sourceKey: 'id' });
+// billModel.belongsTo(restaurantModel, { foreignKey: 'restaID', targetKey: 'id' })
 //---------status ==> bills
 orderStatusModel.hasMany(billModel, { foreignKey: 'statusID', sourceKey: 'id' });
 billModel.belongsTo(orderStatusModel, { foreignKey: 'statusID', targetKey: 'id' })
@@ -64,9 +64,9 @@ const Collection = require('./collection');
 const restaurantCollection = new Collection(restaurantModel);
 const itemsCollection = new Collection(itemsModel,restaurantModel);
 const orderStatusCollection = new Collection(orderStatusModel);
-const ordersCollection = new Collection(ordersModel);
+const ordersCollection = new Collection(ordersModel,itemsModel);
 const userCollection = new Collection(userModel);
-const billCollection = new Collection(billModel);
+const billCollection = new Collection(billModel,ordersModel,itemsModel,orderStatusModel,restaurantModel,userModel);
 
 // itemsCollection.readItems = async function (id) {
 //     let record=[];

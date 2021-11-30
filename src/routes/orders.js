@@ -1,66 +1,75 @@
 'use strict'
 const express = require("express")
-const {orderCollection} = require('../models/index')
+const { billCollection, ordersCollection, itemsCollection } = require('../models/index')
 const router = express.Router()
 const basicAuth = require('../middleware/basic');
 const bearerAuth = require("../middleware/bearer");
 const permissions = require("../middleware/acl.js");
 
 
+router.post('/order', bearerAuth, permissions('read'), async (req, res, next) => {
+  let ItemDetails = await itemsCollection.readItem(req.body.itemID);
 
-router.get('./order',bearerAuth,permissions('delete'),hundlerGet)
-router.get('./order/id',bearerAuth,permissions('read'),hundlerGetOne)
-router.post('./order',bearerAuth,permissions('read'),hundlerCreate)
-router.put('./order/id',bearerAuth,permissions('read'),hundlerUpdate)
-router.delete('./order/id',bearerAuth,permissions('read'),hundlerDelete)
+  let item = req.body;
+  item.price = ItemDetails[0].itemPrice
+  item.totalItem = ItemDetails[0].itemPrice * req.body.qty
+  item.billID = 0
 
-async function hundlerGet(req, res) {
-  try {
-    let allRecords = await orderCollection.get();
-    res.status(200).json(allRecords);
-  } catch (err) {
-    throw new Error(err.message);
+  let bill = {
+    custID: req.user.id,
+    statusID : 1,
+    totalBill:Number(ItemDetails[0].itemPrice * req.body.qty)
   }
-}
 
-async function hundlerGetOne(req, res) {
+  let billRecord = await billCollection.create(bill);
+  item.billID = billRecord.id
+  let orderRecord = await ordersCollection.create(item);
+  res.status(201).json(orderRecord);
+});
+router.get('/order', bearerAuth, permissions('read'), async (req, res, next) => {
+  let bill = await billCollection.readOrders(req.user.id);
+console.log(bill);
+  res.status(200).json(bill);
+});
+router.get('/order/:id', bearerAuth, permissions('read'), async (req, res, next) => {
+  let bill = await billCollection.readOrders(req.user.id,req.params.id);
+console.log(bill);
+  res.status(200).json(bill);
+});
+router.get('/runorder', bearerAuth, permissions('read'), async (req, res, next) => {
+  let bill = await billCollection.readRunningOrders(req.user.id);
+console.log(bill);
+  res.status(200).json(bill);
+});
+//==============================
+router.get('/allOrders', bearerAuth, permissions('delete'), async (req, res, next) => {
+  let bill = await billCollection.readAllOrders();
+// console.log(bill);
+  res.status(200).json(bill);
+});
+
+router.get('/allOrders/:id', bearerAuth, permissions('delete'), async (req, res, next) => {
+  let bill = await billCollection.readAllOrders(req.params.id);
+// console.log(bill);
+  res.status(200).json(bill);
+});
+//=======================================================================
+
+
+router.put('/order/:id',bearerAuth,permissions('update-status'),updateStatus)
+
+async function updateStatus(req, res) {
   try {
-    let id = req.params.id
-    let allRecords = await orderCollection.get(id);
-    res.status(200).json(allRecords);
-  } catch (err) {
-    throw new Error(err.message);
-  }
-}
-
-
-async function hundlerCreate(req, res) {
-  try {
-    let obj = req.body;
-    let newRecord = await orderCollection.create(obj);
-    res.status(201).json(newRecord);
-  } catch (err) {
-    throw new Error(err.message);
-  }
-}
-
-async function hundlerUpdate(req, res) {
-  try {
-    const id = req.params.id;
-    const obj = req.body;
-    let updatedRecord = await orderCollection.update(id, obj);
+    let id =req.params.id
+    let obj = {};
+    obj.statusID = req.body.statusID  
+    let updatedRecord = await billCollection.update(id, obj);
     res.status(200).json(updatedRecord);
   } catch (err) {
     throw new Error(err.message);
   }
 }
+//=======================================================================
 
-async function hundlerDelete(req, res) {
-  try {
-    let id = req.params.id;
-    let deletedRecord = await orderCollection.delete(id);
-    res.status(200).json(deletedRecord);
-  } catch (err) {
-    throw new Error(err.message);
-  }
-}
+
+module.exports = router;
