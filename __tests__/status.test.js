@@ -6,16 +6,12 @@ const {server} = require('../src/server');
 const mockRequest = supertest(server);
 const { db } = require('../src/models/index');
 
-setTimeout(() => {
-    
-
-
 beforeAll(async () => {
     await db.sync();
 });
-afterAll(async () => {
-    await db.drop();
-  });
+// afterAll(async () => {
+//     await db.drop();
+//   });
 
 let users = {
     Admin: { username: 'munes', password: 'password', userRole: 'Admin' ,userAddress :"Amman ",userPhone:"079", userEmail :"munes1"},
@@ -184,4 +180,4 @@ describe('check status route with admin', () => {
             })
 
         });
-    }, 20000);
+        
