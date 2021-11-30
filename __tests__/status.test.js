@@ -6,10 +6,6 @@ const {server} = require('../src/server');
 const mockRequest = supertest(server);
 const { db } = require('../src/models/index');
 
-setTimeout(() => {
-    
-
-
 beforeAll(async () => {
     await db.sync();
 });
@@ -184,4 +180,3 @@ describe('check status route with admin', () => {
             })
 
         });
-    }, 20000);

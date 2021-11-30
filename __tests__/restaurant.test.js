@@ -6,14 +6,14 @@ const supertest = require('supertest')
 const {server} = require('../src/server')
 const mockRequest = supertest(server);
 const { db } = require("../src/models/index");
-setTimeout(() => {
+
 beforeAll(async () => {
   await db.sync();
 });
 
-afterAll(async () => {
-  await db.drop();
-});
+// afterAll(async () => {
+//   await db.drop();
+// });
 
 let user = {
     
@@ -135,4 +135,3 @@ describe('Restaurant router', ()=>{
 //  })
 
 })
-},10000);
