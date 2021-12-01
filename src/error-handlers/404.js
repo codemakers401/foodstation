@@ -1,6 +1,6 @@
 'use strict'
 
-function handle404(req,res,next)
+module.exports=function handle404(req,res,next)
 {
     const errorObject={
         status:404,
@@ -8,4 +8,3 @@ function handle404(req,res,next)
     }
     res.status(404).json(errorObject)
 }
-module.exports=handle404
