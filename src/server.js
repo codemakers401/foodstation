@@ -13,7 +13,6 @@ const profile = require('./routes/profile');
 const orderRoutes = require('./routes/orders');
 const restaurantRoutes = require('./routes/restaurant');
 const status = require('./routes/status')
-const socketApp = require('../src/socket/main/app')
 const notFoundHandler = require('./error-handlers/404.js');
 const errorHandler = require('./error-handlers/500.js');
 

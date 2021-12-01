@@ -92,9 +92,7 @@ async function updateStatus(req, res) {
   }
 }
 //=======================================================================
-router.put('/ordergps/:id', bearerAuth, permissions('update-status'), updateStatus)
-
-async function updateStatus(req, res) {
+router.put('/ordergps/:id', bearerAuth, permissions('update-status'),async (req, res) =>{
   try {
     let id = req.params.id
     let obj = {};
@@ -109,6 +107,6 @@ async function updateStatus(req, res) {
   } catch (err) {
     throw new Error(err.message);
   }
-}
+})
 
 module.exports = router;
