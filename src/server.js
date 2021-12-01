@@ -48,6 +48,9 @@ io.on('connection', (socket)=>{
   socket.on('billUpdate',updatedRecord=>{
     io.to(updatedRecord.custID).emit('updateBill',`your order status is >>> ${updatedRecord.statusID}`)
   })
+  socket.on('billGPS',gpsObj=>{
+    io.to(gpsObj.userID).emit('updateBill',`your order in the way at : >>> ${gpsObj.gps}`)
+  })
     
 });
 
