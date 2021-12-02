@@ -14,7 +14,7 @@ authRouter.post('/signup', async (req, res, next) => {
     let userRecord = await userCollection.create(req.body);
     const output = {
       user: userRecord,
-      // token: userRecord.token
+      token: userRecord.token
     };
     res.status(201).json(output);
   } catch (e) {
@@ -52,6 +52,8 @@ authRouter.get('/users/:id', bearerAuth, permissions('delete'), async (req, res,
         username: user.username,
         userEmail: user.userEmail,
         userRole: user.userRole,
+        userAddress: user.userAddress,
+        userPhone: user.userPhone,
       }
       return userData
     });

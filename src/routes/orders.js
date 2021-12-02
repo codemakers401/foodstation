@@ -8,10 +8,18 @@ const permissions = require("../middleware/acl.js");
 const host = process.env.HOST || 'https://foodstation-2021.herokuapp.com';
 const io = require('socket.io-client')(host)
 const socket = io.connect(host)
+let gpsObj = {};
 socket.on('updateBill', c => {
-  console.log('\x1b[34m ricieved a msg from servet in oerder : ', c);
+  console.log(`\x1b[35m msg from server:${ c}\x1b[0m`);
 })
-
+const sendgps =async(gpsObj)=>{
+ 
+  function x(){
+    socket.emit('billGPS', gpsObj)
+    gpsObj.id++;
+  }
+  setInterval((x), 2000);
+  }
 
 router.post('/order', bearerAuth, permissions('read'), async (req, res, next) => {
 
@@ -31,16 +39,16 @@ router.post('/order', bearerAuth, permissions('read'), async (req, res, next) =>
   item.billID = billRecord.id
   let orderRecord = await ordersCollection.create(item);
 
-
+  const socket = io.connect(host)
   socket.emit('createOrder', billRecord);
   socket.on('newOrder', c => {
-    console.log(c);
+    console.log('--------------',c);
     let x = [orderRecord, c]
-    // res.status(201).json(x);
-    res.status(201).json(c);
+    res.status(201).json(x);
+    // res.status(201).json(c);
   })
   socket.on('updateBill', c => {
-    console.log(c);
+    // console.log(c);
     let x = [orderRecord, c]
     // res.status(201).json(x);
     // res.status(201).json(c);
@@ -85,7 +93,7 @@ async function updateStatus(req, res) {
     let obj = {};
     obj.statusID = req.body.statusID
     let updatedRecord = await billCollection.update(id, obj);
-    socket.emit('billUpdate', updatedRecord)
+    // socket.emit('billUpdate', updatedRecord)
     res.status(200).json(updatedRecord);
   } catch (err) {
     throw new Error(err.message);
@@ -96,17 +104,28 @@ router.put('/ordergps/:id', bearerAuth, permissions('update-status'),async (req,
   try {
     let id = req.params.id
     let obj = {};
-    let gpsObj = {};
+   
     obj.statusID = req.body.statusID;
     gpsObj.gps = req.body.gps;
+    gpsObj.id = 1;
     gpsObj.billID = req.params.id;
     gpsObj.userID = req.user.id;
     let updatedRecord = await billCollection.update(id, obj);
-    socket.emit('billGPS', gpsObj)
+    console.log(gpsObj);
+    sendgps(gpsObj),
     res.status(200).json(updatedRecord);
   } catch (err) {
     throw new Error(err.message);
   }
 })
+router.put('/dis',async (req, res) =>{
+  try {
+    res.status(200).json("updatedRecord");
+    socket.disconnect() 
+  } catch (err) {
+    throw new Error(err.message);
+  }
+})
+socket.disconnect() 
 
 module.exports = router;

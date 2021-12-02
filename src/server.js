@@ -36,19 +36,23 @@ app.use('*', notFoundHandler);
 app.use(errorHandler);
 
 io.on('connection', (socket)=>{
-  console.log('\x1b[36m%s\x1b[0m', 'Client Socket connected');
+  console.log('\x1b[41m%s\x1b[0m','>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+  console.log('\x1b[36m%s\x1b[0m \x1b[41m%s\x1b[0m', 'Client Socket connected');
+  console.log('\x1b[41m%s\x1b[0m','>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   
   socket.on('createOrder',(order)=>{
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     socket.join(order.custID)
     io.to(order.custID).emit('newOrder','your order was accepted')
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   })
   socket.on('billUpdate',updatedRecord=>{
-    io.to(updatedRecord.custID).emit('updateBill',`your order status is >>> ${updatedRecord.statusID}`)
+    console.log('\x1b[44m%s\x1b[0m', updatedRecord);
+    io.to(updatedRecord.custID).emit('updateBill',`your order status is >>> ${updatedRecord.status}`)
   })
   socket.on('billGPS',gpsObj=>{
-    io.to(gpsObj.userID).emit('updateBill',`your order in the way at : >>> ${gpsObj.gps}`)
+    console.log(`\x1b[34m msg from  driver : \x1b[0m`,gpsObj);
+    let orderLocation = gpsObj.id +'-->'+gpsObj.gps
+ 
+    io.to(gpsObj.userID).emit('updateBill',`\x1b[36m(ORDER LOCATION) >>> ${orderLocation}\x1b[0m`)
   })
     
 });
