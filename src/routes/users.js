@@ -52,6 +52,7 @@ authRouter.get('/users/:id', bearerAuth, permissions('delete'), async (req, res,
         username: user.username,
         userEmail: user.userEmail,
         userRole: user.userRole,
+        userimg: user.userimg
       }
       return userData
     });

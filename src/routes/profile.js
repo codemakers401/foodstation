@@ -16,6 +16,7 @@ profile.get('/profile', bearerAuth, permissions('update-profile'), async (req, r
       userRole: user.userRole,
       userAddress: user.userAddress,
       userPhone: user.userPhone,
+      userimg : user.userimg
     }
     return user
   });
@@ -27,6 +28,9 @@ profile.put('/profile', bearerAuth, permissions('update-profile'), async (req, r
     req.body.userEmail&&(userData.userEmail = req.body.userEmail);
     req.body.userAddress&&(userData.userAddress = req.body.userAddress);
     req.body.userPhone&&(userData.userPhone = req.body.userPhone);
+    req.body.userimg&&(userData.userimg = req.body.userimg);
+
+    
     console.log(userData);
   let userRecords = await userCollection.update(req.user.id,userData);
   console.log(userRecords);

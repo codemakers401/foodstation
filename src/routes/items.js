@@ -17,6 +17,7 @@ item.get(('/item'), bearerAuth, permissions('read'), async (req, res, next) => {
       itemCategory: item.itemCategory,
       itemPrice: item.itemPrice,
       restaID: item.restaID,
+      itemimg:item.itemimg,
       available: item.available,
       restaurantName: item.restaurant.restaurantName,
       Location: item.restaurant.restaurantLocation
@@ -38,6 +39,8 @@ item.get('/item/:id', bearerAuth, permissions('read'), async (req, res, next) =>
         itemCategory: item.itemCategory,
         itemPrice: item.itemPrice,
         restaID: item.restaID,
+        itemimg:item.itemimg,
+
         available: item.available,
         restaurantName: item.restaurant.restaurantName,
         Location: item.restaurant.restaurantLocation
@@ -57,6 +60,8 @@ item.put('/item/:id', bearerAuth, permissions('delete'), async (req, res, next) 
   req.body.itemName && (item.itemName = req.body.itemName);
   req.body.itemCategory && (item.itemCategory = req.body.itemCategory);
   req.body.itemPrice && (item.itemPrice = req.body.itemPrice);
+  req.body.itemimg && (item.itemimg = req.body.itemimg);
+
   req.body.restaID && (item.restaID = req.body.restaID);
   req.body.available && (item.available = req.body.available);
 
@@ -95,6 +100,8 @@ item.get('/itemByRes/:id', bearerAuth, permissions('read'), async (req, res, nex
         itemName: item.itemName,
         itemCategory: item.itemCategory,
         itemPrice: item.itemPrice,
+        itemimg:item.itemimg,
+
         restaID: item.restaID,
         available: item.available,
         restaurantName: item.restaurant.restaurantName,

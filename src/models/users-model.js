@@ -13,6 +13,9 @@ const userSchema = (sequelize, DataTypes) => {
     userAddress: { type: DataTypes.STRING, allowNull: false },
     userPhone: { type: DataTypes.STRING, allowNull: false },
     userEmail: { type: DataTypes.STRING, allowNull: false, unique: true },
+    userimg: { type: DataTypes.STRING, allowNull: true ,defaultValue :'https://www.pngitem.com/pimgs/m/504-5040528_empty-profile-picture-png-transparent-png.png' },
+    
+    
     token: { type: DataTypes.VIRTUAL },
     actions: {
       type: DataTypes.VIRTUAL,
