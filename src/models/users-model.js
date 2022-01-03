@@ -18,9 +18,9 @@ const userSchema = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       get() {
         const acl = {
-          Customer: ['read','update-profile' ],
-          Driver:   ['read','update-profile','update-status','create'],
-          Admin:    ['read','update-profile','update-status','create', 'update', 'delete',],
+          Customer: ['read','update-profile' ,'customer'],
+          Driver:   ['read','update-profile','update-status','create','driver'],
+          Admin:    ['read','update-profile','update-status','create', 'update', 'delete','admin'],
         }
         return acl[this.userRole];
       }

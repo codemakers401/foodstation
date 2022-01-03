@@ -130,6 +130,21 @@ class Collection {
       console.error('error in deleting record for model', this.model, `id:${id}`)
     }
   }
+
+  async readDriverOrders(driverid) {
+    let record=[];
+   try {if(driverid){
+       record = await this.model.findAll({where:{driverid:driverid}, include:[{model :this.parent1Model,include:[{model:this.parent2Model,include:this.parent4Model}]},{model :this.parent3Model},{model :this.parent5Model}], order:['id']})
+       return record;
+     }else{
+       record = await this.model.findAll({include:[{model :this.parent1Model,include:[{model:this.parent2Model,include:this.parent4Model}]},{model :this.parent3Model},{model :this.parent5Model}], order:['id']})
+       return record;
+     }}
+  catch (e) {
+     console.error('error in reading record/s for model (84)', this.model)
+   }
+ 
+ }
   
 }
 

@@ -12,6 +12,7 @@ router.get('/status/:id',bearerAuth,permissions('delete'),handlerGetOne)
 
 router.put('/status/:id',bearerAuth,permissions('delete'),handlerUpdate)
 router.post('/status',bearerAuth,permissions('delete'),handlerCreate)
+router.delete('/status/:id',bearerAuth,permissions('delete'),handlerDelete)
 
 
 async function handlerGet(req, res) {
@@ -70,6 +71,14 @@ async function handlerGet(req, res) {
       throw new Error(err.message);
     }
   }
-
-
+  async function handlerDelete(req, res) {
+    try{
+    let deletedItem = await orderStatusCollection.delete(req.params.id);
+    console.log(deletedItem);
+    res.status(200).json(deletedItem);
+    }catch (err) {
+      throw new Error(err.message);
+    }
+  }
+  
   module.exports=router;

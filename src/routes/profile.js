@@ -24,7 +24,7 @@ profile.get('/profile', bearerAuth, permissions('update-profile'), async (req, r
 });
 profile.put('/profile', bearerAuth, permissions('update-profile'), async (req, res, next) => {
    let userData ={}
-    req.body.username&&(userData.username = req.body.username);
+    req.body.userEmail&&(userData.userEmail = req.body.userEmail);
     req.body.userAddress&&(userData.userAddress = req.body.userAddress);
     req.body.userPhone&&(userData.userPhone = req.body.userPhone);
     console.log(userData);

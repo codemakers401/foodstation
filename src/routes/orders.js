@@ -1,6 +1,6 @@
 'use strict'
 const express = require("express")
-const { billCollection, ordersCollection, itemsCollection } = require('../models/index')
+const { billCollection, ordersCollection, itemsCollection ,userCollection } = require('../models/index')
 const router = express.Router()
 const basicAuth = require('../middleware/basic');
 const bearerAuth = require("../middleware/bearer");
@@ -28,6 +28,7 @@ router.post('/order', bearerAuth, permissions('read'), async (req, res, next) =>
   }
 
   let billRecord = await billCollection.create(bill);
+  console.log(bill,'--------------------------------------------------------------------')
   item.billID = billRecord.id
   let orderRecord = await ordersCollection.create(item);
 
@@ -36,8 +37,8 @@ router.post('/order', bearerAuth, permissions('read'), async (req, res, next) =>
   socket.on('newOrder', c => {
     console.log(c);
     let x = [orderRecord, c]
-    // res.status(201).json(x);
-    res.status(201).json(c);
+    res.status(201).json(x);
+    // res.status(201).json(c);
   })
   socket.on('updateBill', c => {
     console.log(c);
@@ -63,7 +64,7 @@ router.get('/runorder', bearerAuth, permissions('read'), async (req, res, next) 
   res.status(200).json(bill);
 });
 //==============================
-router.get('/allOrders', bearerAuth, permissions('delete'), async (req, res, next) => {
+router.get('/allOrders', bearerAuth, permissions('update-status'), async (req, res, next) => {
   let bill = await billCollection.readAllOrders();
   // console.log(bill);
   res.status(200).json(bill);
@@ -71,6 +72,12 @@ router.get('/allOrders', bearerAuth, permissions('delete'), async (req, res, nex
 
 router.get('/allOrders/:id', bearerAuth, permissions('delete'), async (req, res, next) => {
   let bill = await billCollection.readAllOrders(req.params.id);
+  // console.log(bill);
+  res.status(200).json(bill);
+});
+
+router.get('/allDriverOrders/:id', bearerAuth, permissions('update-status'), async (req, res, next) => {
+  let bill = await billCollection.readDriverOrders(req.params.id);
   // console.log(bill);
   res.status(200).json(bill);
 });
@@ -84,7 +91,15 @@ async function updateStatus(req, res) {
     let id = req.params.id
     let obj = {};
     obj.statusID = req.body.statusID
-    let updatedRecord = await billCollection.update(id, obj);
+
+    let isDriver = await userCollection.read(req.body.driverid);
+    console.log(isDriver[0].userRole , '--------------------------',req.body.driverid);
+    if(isDriver[0].userRole === 'Driver'){
+      obj.driverid = req.body.driverid
+
+  }
+  
+  let updatedRecord = await billCollection.update(id, obj);
     socket.emit('billUpdate', updatedRecord)
     res.status(200).json(updatedRecord);
   } catch (err) {

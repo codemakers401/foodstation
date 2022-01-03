@@ -78,11 +78,11 @@ item.post('/item', bearerAuth, permissions('delete'), async (req, res, next) => 
   res.status(200).json(newItem);
 });
 
-// item.delete('/item/:id', bearerAuth, permissions('delete'), async (req, res, next) => {
-//   let deletedItem = await itemsCollection.delete(req.params.id);
-//   console.log(deletedItem);
-//   res.status(200).json(deletedItem);
-// });
+item.delete('/item/:id', bearerAuth, permissions('delete'), async (req, res, next) => {
+  let deletedItem = await itemsCollection.delete(req.params.id);
+  console.log(deletedItem);
+  res.status(200).json(deletedItem);
+});
 
 item.get('/itemByRes/:id', bearerAuth, permissions('read'), async (req, res, next) => {
   let oneItem = await itemsCollection.readItemByResId(req.params.id);
