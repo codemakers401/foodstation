@@ -32,12 +32,12 @@ router.post('/order', bearerAuth, permissions('read'), async (req, res, next) =>
   item.billID = billRecord.id
   let orderRecord = await ordersCollection.create(item);
 
+  res.status(201).json(orderRecord);
 
   socket.emit('createOrder', billRecord);
   socket.on('newOrder', c => {
-    console.log(c);
+    console.log('///////////////////////////',c);
     let x = [orderRecord, c]
-    res.status(201).json(x);
     // res.status(201).json(c);
   })
   socket.on('updateBill', c => {
