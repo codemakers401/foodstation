@@ -41,7 +41,8 @@ io.on('connection', (socket)=>{
   socket.on('createOrder',(order)=>{
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     socket.join(order.custID)
-    io.to(order.custID).emit('newOrder','your order was accepted')
+    setInterval(() => io.to(order.custID).emit('newOrder','your order was accepted'), 3000);
+    
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
   })
   socket.on('billUpdate',updatedRecord=>{
@@ -52,6 +53,24 @@ io.on('connection', (socket)=>{
     io.to(gpsObj.userID).emit('updateBill',`your order in the way at : >>> ${gpsObj.gps}`)
   })
     
+});
+const getApiAndEmit = socket => {
+  const response = new Date();
+  // Emitting a new message. Will be consumed by the client
+  socket.emit("FromAPI", response);
+};
+let interval;
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+  if (interval) {
+    clearInterval(interval);
+  }
+  interval = setInterval(() => getApiAndEmit(socket), 1000);
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+    clearInterval(interval);
+  });
 });
 
 
