@@ -63,10 +63,10 @@ item.put('/item/:id', bearerAuth, permissions('delete'), async (req, res, next) 
   req.body.itemimg && (item.itemimg = req.body.itemimg);
 
   req.body.restaID && (item.restaID = req.body.restaID);
-  req.body.available && (item.available = req.body.available);
+ ( req.body.available ||req.body.available === false )&& (item.available = req.body.available);
 
 
-  console.log(item);
+  console.log('//////////////////',req.body);
   let updateItem = await itemsCollection.update(req.params.id, item);
   console.log(updateItem);
   res.status(200).json(updateItem);

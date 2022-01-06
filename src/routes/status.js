@@ -45,7 +45,10 @@ async function handlerGet(req, res) {
     try {
       const id = req.params.id;
       const obj = req.body;
+      
       let updatedRecord = await orderStatusCollection.update(id, obj);
+      console.log('///////////////',updatedRecord);
+
       if(updatedRecord&&updatedRecord.id){
       res.status(200).json(updatedRecord);
       }else
